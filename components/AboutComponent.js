@@ -2,11 +2,18 @@ import React, { Component } from 'react';
 import { Text, ScrollView, FlatList } from 'react-native';
 
 import { Card } from 'react-native-elements';
-import { LEADERS } from '../shared/leaders';
 import { ListItem } from 'react-native-elements';
 
+import { connect } from 'react-redux';
+import { baseUrl } from '../shared/baseUrl';
 
-function History(props) {
+const mapStateToProps = state => {
+    return {
+      leaders: state.leaders
+    }
+  }
+
+function History() {
     return(
         <Card
         title={"Our History"}>
@@ -20,17 +27,7 @@ function History(props) {
         )
 }
 
-
-
-
 class About extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            leaders: LEADERS
-        };
-    }
 
     static navigationOptions = {
         title: 'About Us'
@@ -38,37 +35,32 @@ class About extends Component {
 
     render()
     {
-        const renderMenuItem = ({item, index}) => {
+        const renderLeader = ({item, index}) => {
             return( 
             <ListItem
                 key={index}
                 title={item.name}
                 subtitle={item.description}
                 hideChevron={true}
-                leftAvatar={{ source: require('./images/alberto.png')}}
+                leftAvatar={{source: {uri: baseUrl + item.image}}}
             />
             );
         };
         return(
             <ScrollView> 
             <History/>
-           <Card
+            <Card
                title='Corporate Leadership'>
             <FlatList 
-                data={this.state.leaders}
-                renderItem={renderMenuItem}
-                keyExtractor={item => item.id.toString()}
-                />    
+                    data={this.props.leaders.leaders}
+                    renderItem={renderLeader}
+                    keyExtractor={item => item.id.toString()}
+                    />    
 			</Card>
-
             </ScrollView>
-       
-        );
-        
-        
-        
+            );
     }
 
 }
 
-export default About;
+export default connect(mapStateToProps)(About);
