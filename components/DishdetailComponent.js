@@ -1,11 +1,15 @@
 import React from 'react';
-import { Text, View, ScrollView, FlatList } from 'react-native';
-import { Card, Icon } from 'react-native-elements';
+import { Text, View, ScrollView, FlatList, Modal, Button } from 'react-native';
+import { Card, Icon, Rating, Input } from 'react-native-elements';
 
 import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 
-import {postFavorite} from '../redux/ActionCreators';
+import {postFavorite, postComment} from '../redux/ActionCreators';
+import { COMMENTS_FAILED } from '../redux/ActionTypes';
+
+import { DISHES } from "../shared/dishes";
+import { COMMENTS } from "../shared/comments";
 
 const mapStateToProps = state => {
     return {
@@ -16,7 +20,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-    postFavorite: (dishId) => dispatch(postFavorite(dishId))
+    postFavorite: (dishId) => dispatch(postFavorite(dishId)),
+    postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment))
 });
 
 function RenderDish(props) {
@@ -37,6 +42,14 @@ function RenderDish(props) {
                     type='font-awesome'
                     color='#f50'
                     onPress={() => props.favorite ? console.log('Already favorite') : props.onPress()}
+                />
+                <Icon
+                    raised={true}
+                    reverse={true}
+                    name="pencil"
+                    type="font-awesome"
+                    color="#512DA8"
+                    onPress={() => props.onAddCommentPress()}
                 />
             </Card>
         );
@@ -74,6 +87,31 @@ function RenderComments(props) {
 
 class Dishdetail extends React.Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+          dishes: DISHES,
+          comments: COMMENTS,
+          favorites: [],
+          showModal: false,
+          rating: 5,
+          author: "",
+          comment: "",
+        };
+      }
+    
+      toggleModal() {
+        this.setState({ showModal: !this.state.showModal });
+      }
+    
+      resetForm() {
+        this.setState({
+          rating: 5,
+          author: "",
+          comment: "",
+        });
+      }
+
     markFavorite(dishId) {
         this.props.postFavorite(dishId);
     }
@@ -90,8 +128,59 @@ class Dishdetail extends React.Component {
                 <RenderDish dish={this.props.dishes.dishes[+dishId]}
                     favorite={this.props.favorites.some(el => el === dishId)}
                     onPress={() => this.markFavorite(dishId)} 
+                    onAddCommentPress={() => this.toggleModal()}
                     />
                 <RenderComments comments={this.props.comments.comments.filter((comment) => comment.dishId === dishId)} />
+                <Modal
+                    animationType={"slide"}
+                    transparent={false}
+                    visible={this.state.showModal}
+                    onDismiss={() => this.toggleModal()}
+                    onRequestClose={() => this.toggleModal()}
+                >
+                <View style={{ marginTop: 40 }}>
+                <Rating
+                    showRating
+                    minValue={1}
+                    onFinishRating={(value) => this.setState({ rating: value })}
+                    style={{ paddingVertical: 10 }}
+                    startingValue={5}
+                />
+                <Input
+                    placeholder="Author"
+                    leftIcon={{ type: "font-awesome", name: "user-o" }}
+                    onChangeText={(value) => this.setState({ author: value })}
+                />
+                <Input
+                    placeholder="Comment"
+                    leftIcon={{ type: "font-awesome", name: "comment-o" }}
+                    onChangeText={(value) => this.setState({ comment: value })}
+                />
+                <Button
+                    onPress={() => {
+                        this.props.postComment(
+                        dishId,
+                        this.state.rating,
+                        this.state.author,
+                        this.state.comment
+                        );
+                    this.toggleModal();
+                    this.resetForm();
+                    }}
+                    color="#512DA8"
+                    title="Submit"
+                />
+                <Button
+                    onPress={() => {
+                        this.toggleModal();
+                        this.resetForm();
+                    }}
+                    color="grey"
+                    title="Cancel"
+                />
+                </View>
+                </Modal>
+            
             </ScrollView>
             
           );
