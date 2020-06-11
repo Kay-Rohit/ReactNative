@@ -16,3 +16,5 @@ export const LEADERS_FAILED = 'LEADERS_FAILED';
 export const POST_FAVORITE = 'POST_FAVORITE';
 export const ADD_FAVORITE = 'ADD_FAVORITE';
 export const POST_COMMENT ='POST_COMMENT'; //to add comment to the database
+
+export const DELETE_FAVORITE = 'DELETE_FAVORITE';
