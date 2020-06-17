@@ -9,6 +9,8 @@ import { baseUrl } from '../shared/baseUrl';
 import {Loading} from './LoadingComponent';
 import {deleteFavorite} from '../redux/ActionCreators';
 
+import * as Animatable from 'react-native-animatable';
+
 const mapStateToProps = state => {
     return {
       dishes: state.dishes,
@@ -58,6 +60,7 @@ class Favorites extends React.Component{
 
             return(
                 <Swipeout right={rightButton} autoClose={true}>
+                    <Animatable.View animation="fadeInRightBig" duration={2000}>
                     <ListItem
                         key={index}
                         title={item.name}
@@ -66,6 +69,7 @@ class Favorites extends React.Component{
                         onPress={() => navigate('Disdetail', {dishId: item.id})}
                         leftAvatar={{source: {uri: baseUrl + item.image}}}
                     />
+                    </Animatable.View>
                 </Swipeout>
             );
         }

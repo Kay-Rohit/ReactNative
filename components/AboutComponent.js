@@ -8,6 +8,8 @@ import { connect } from 'react-redux';
 import { baseUrl } from '../shared/baseUrl';
 import { Loading } from './LoadingComponent';
 
+import * as Animatable from 'react-native-animatable';
+
 const mapStateToProps = state => {
     return {
       leaders: state.leaders
@@ -51,22 +53,26 @@ class About extends Component {
         if(this.props.leaders.isLoading) {
             return(
                 <ScrollView> 
+                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
                     <History/>
                     <Card
                         title='Corporate Leadership'>
                         <Loading /> 
                     </Card>
+                    </Animatable.View>
                 </ScrollView>
             );
         }
         else if(this.props.leaders.errMess) {
             return(
-                <ScrollView> 
+                <ScrollView>
+                    <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
                     <History/>
                     <Card
                         title='Corporate Leadership'>
                         <Text>{this.props.leaders.errMess}</Text>
                     </Card>
+                    </Animatable.View>
                 </ScrollView>
             );
         }
