@@ -1,12 +1,22 @@
 import React, { Component } from 'react';
-import { Text, ScrollView, View } from 'react-native';
-import { Card } from 'react-native-elements';
+import { Text, ScrollView } from 'react-native';
+import { Card, Icon, Button } from 'react-native-elements';
 
-
+import * as MailComposer from 'expo-mail-composer';
 import * as Animatable from 'react-native-animatable';
 
 
-function RenderContact(props) {
+class Contact extends Component {
+
+    sendMail() {
+        MailComposer.composeAsync({
+            recipients: ['rohitpatnaik245@gmail.com'],
+            subject: 'Enquiry',
+            body: 'TO whom it may concern:'
+        });
+    }
+
+    render() {
         return(
             <ScrollView>
                 <Animatable.View animation="fadeInDown" duration={2000} delay={1000}>
@@ -30,20 +40,17 @@ function RenderContact(props) {
                         <Text style={{margin: 10}}>
                         {"Email:confusion@food.net"}
                         </Text>
+                        <Button
+                            title=' Send Email'
+                            buttonStyle={{backgroundColor: '#512da8'}}
+                            icon={<Icon name='envelope-o' type='font-awesome' color='white' />}
+                            onPress={this.sendMail}
+                        />
                     </Card>
                 </Animatable.View>
             </ScrollView>
         );
-    
+    }
 }
-
-    
-
-function Contact(props) {
-    return(<RenderContact />);
-}
-
-
-
 
 export default Contact;
