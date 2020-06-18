@@ -10,7 +10,8 @@ import Reservation from './ReservationComponent';
 import Favorites from './FavoriteComponent';
 import Login from './LoginComponent';
 
-import { View, Platform, Image, StyleSheet, Text, ScrollView } from 'react-native';
+import { View, Platform, Image, StyleSheet, Text, ScrollView, ToastAndroid } from 'react-native';
+import NetInfo from "@react-native-community/netinfo";
 import { createStackNavigator,createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
 import {Icon} from 'react-native-elements';
 

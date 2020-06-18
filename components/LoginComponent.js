@@ -137,6 +137,17 @@ class RegisterTab extends Component{
         }
     }
 
+    getImageFromGallery = async () => {
+        let selectImage = await ImagePicker.launchImageLibraryAsync({
+            allowsEditing: true,
+            aspect: [4, 3],
+        });
+        if (!selectImage.cancelled) {
+            console.log(selectImage);
+            this.processImage(selectImage.uri);
+        }
+    }
+
     peocessImage = async (imageUri) => {
         let processedImage = await ImageManipulator.manipulateAsync(
             imageUri,
@@ -174,14 +185,18 @@ class RegisterTab extends Component{
             <View style={styles.container}>
 
                 <View style={styles.imageContainer}>
-                    <Image 
-                        source={{uri: this.state.imageUrl}}
+                    <Image
+                        source={{ uri: this.state.imageUrl }}
                         loadingIndicatorSource={require('./images/logo.png')}
                         style={styles.image}
                     />
                     <Button
                         title= 'camera'
                         onPress={this.getImageFromCamera}
+                    />
+                    <Button
+                        title="Gallery"
+                        onPress={this.getImageFromGallery}
                     />
                 </View>
                 <Input
